@@ -1,5 +1,24 @@
 # Robot autónomo con ESP32 e IA en la nube
 
+## Estado actual
+
+Estamos armando la **cabeza** (ESP32-S3 con cámara). Los motores vienen después.
+
+👉 **Lista de tareas:** [docs/plan-cabeza.md](docs/plan-cabeza.md)
+
+### Programas
+
+Se programan con Arduino IDE 2 y el paquete de placas **esp32 by Espressif Systems**. La configuración de la placa está en el plan.
+
+| Carpeta | Placa | Qué hace |
+|---|---|---|
+| [`firmware/cabeza/01_blink`](firmware/cabeza/01_blink) | ESP32-S3 | Hace parpadear el LED (primer programa) |
+| [`firmware/cabeza/02_wifi_web`](firmware/cabeza/02_wifi_web) | ESP32-S3 | Página web para controlar el LED desde el celular |
+| [`firmware/cabeza/03_uart_cabeza`](firmware/cabeza/03_uart_cabeza) | ESP32-S3 | Manda órdenes al cuerpo por UART |
+| [`firmware/cuerpo/03_uart_cuerpo`](firmware/cuerpo/03_uart_cuerpo) | ESP32 NodeMCU | Recibe órdenes de la cabeza y responde |
+
+---
+
 ## Descripción del proyecto
 
 Robot de dos ruedas (2WD) que:
