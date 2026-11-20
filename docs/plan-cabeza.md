@@ -58,12 +58,6 @@ Si estás en un computador donde no puedes conectar nada:
 | Partition Scheme | 16M Flash (3MB APP/9.9MB FATFS) |
 | Puerto | El COM / ttyUSB que aparece al conectar la placa |
 
-**Lo que aprendimos:**
-- Arduino recuerda la última configuración, pero revísala antes de subir si cambiaste de placa (la NodeMCU usa **ESP32 Dev Module**).
-- Si la subida falla: mantén apretado **BOOT**, aprieta y suelta **EN/RST**, suelta **BOOT** y vuelve a subir.
-- Para ver los mensajes desde el principio, abre el Monitor Serie (115200) y aprieta **EN/RST**.
-- Cada programa es una carpeta con un `.ino` del mismo nombre. Los archivos extra de la carpeta aparecen como pestañas.
-
 ---
 
 ## Fase 1 — Primer programa: parpadear un LED
