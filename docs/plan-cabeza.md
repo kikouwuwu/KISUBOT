@@ -13,7 +13,7 @@ Marca cada tarea con `[x]` cuando la termines.
 | 2 — WiFi y control desde el celular | ✅ Funciona |
 | 3 — Cámara | ✅ Funciona (se calienta con el video continuo) |
 | 4 — Cabeza ↔ cuerpo (UART) | ⏸️ En pausa: faltan pines soldados y cables |
-| 5 — IA con la cámara | 🧪 Código listo, falta probarlo en la placa |
+| 5 — IA con la cámara | 🧪 Clave y conexión probadas en Wokwi; falta probar con la cámara en la placa |
 | 6 — Audio | ⏳ Esperando micrófono y amplificador |
 | 7 — Asistente de voz | ⏳ Después de la fase 6 |
 
@@ -138,9 +138,9 @@ Usamos **Gemini** porque tiene un nivel gratuito.
 
 Programas: [`firmware/cabeza/05_vision`](../firmware/cabeza/05_vision/05_vision.ino) (en la placa) y [`firmware/cabeza/05_prueba_wokwi`](../firmware/cabeza/05_prueba_wokwi/05_prueba_wokwi.ino) (en el simulador, sin placa)
 
-- [ ] Crear la clave en [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → *Create API key*. Si pide restringirla, marcar solo **Generative Language API**.
+- [x] Crear la clave en [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → *Create API key*. Usar el **Default project** y no agregarle facturación (así sigue gratis). Si pide restringirla, marcar solo **Generative Language API**.
 - [ ] Probar en AI Studio: subir una foto y preguntar lo mismo que preguntará el robot.
-- [ ] (Sin placa) Probar la clave en Wokwi con `05_prueba_wokwi`: debe responder que ve una pelota roja.
+- [x] (Sin placa) Probar la clave en Wokwi con `05_prueba_wokwi`. Resultado del 20-11-2026: *"Veo una pelota roja en el suelo contra un fondo verde y azul."*
 - [ ] Instalar la librería **ArduinoJson** (de Benoit Blanchon) en Arduino: *Sketch → Include Library → Manage Libraries*.
 - [ ] Crear la carpeta `05_vision` con `05_vision.ino` y un `secrets.h` (copiado de `secrets.h.example`) con el WiFi y la clave.
 - [ ] Subir el programa, abrir la IP en el celular y apretar **¿Qué ves?**
