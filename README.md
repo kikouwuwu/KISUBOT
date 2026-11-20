@@ -4,6 +4,10 @@
 
 Estamos armando la **cabeza** (ESP32-S3 con cámara). Los motores vienen después.
 
+- ✅ Funcionan en la placa: LED, página web por WiFi y cámara (fases 0 a 3).
+- ⏸️ Comunicación cabeza ↔ cuerpo (fase 4): falta soldar pines y conseguir cables.
+- 🧪 "¿Qué ves?" con Gemini (fase 5): código listo, falta probarlo en la placa.
+
 👉 **Lista de tareas:** [docs/plan-cabeza.md](docs/plan-cabeza.md)
 
 ### Programas
@@ -16,6 +20,8 @@ Se programan con Arduino IDE 2 y el paquete de placas **esp32 by Espressif Syste
 | [`firmware/cabeza/02_wifi_web`](firmware/cabeza/02_wifi_web) | ESP32-S3 | Página web para controlar el LED desde el celular |
 | [`firmware/cabeza/03_uart_cabeza`](firmware/cabeza/03_uart_cabeza) | ESP32-S3 | Manda órdenes al cuerpo por UART |
 | [`firmware/cuerpo/03_uart_cuerpo`](firmware/cuerpo/03_uart_cuerpo) | ESP32 NodeMCU | Recibe órdenes de la cabeza y responde |
+| [`firmware/cabeza/05_vision`](firmware/cabeza/05_vision) | ESP32-S3 | Saca una foto, se la manda a Gemini y muestra qué ve |
+| [`firmware/cabeza/05_prueba_wokwi`](firmware/cabeza/05_prueba_wokwi) | Simulador Wokwi | Prueba la clave de Gemini sin la placa |
 
 ---
 

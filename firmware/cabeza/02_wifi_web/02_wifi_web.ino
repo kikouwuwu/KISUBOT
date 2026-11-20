@@ -6,6 +6,9 @@
 //
 // Antes de subir: copia "secrets.h.example" como "secrets.h" y pon
 // el nombre y la clave de tu WiFi (solo redes de 2,4 GHz).
+// Si sale "secrets.h: No such file or directory", crea una pestaña
+// llamada exactamente secrets.h (menú ⋯ → Nueva pestaña) y pega ahí
+// los #define. Más detalles en docs/plan-cabeza.md (fase 2).
 
 #include <WiFi.h>
 #include <WebServer.h>
