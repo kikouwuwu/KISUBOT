@@ -6,7 +6,7 @@ Estamos armando la **cabeza** (ESP32-S3 con cámara). Los motores vienen despué
 
 - ✅ Funcionan en la placa: LED, página web por WiFi y cámara (fases 0 a 3).
 - ⏸️ Comunicación cabeza ↔ cuerpo (fase 4): falta soldar pines y conseguir cables.
-- 🧪 "¿Qué ves?" con Gemini (fase 5): código listo, falta probarlo en la placa.
+- 🧪 "¿Qué ves?" con Gemini (fase 5): la conexión con Gemini ya funciona en el simulador Wokwi; falta probarla con la cámara en la placa.
 
 👉 **Lista de tareas:** [docs/plan-cabeza.md](docs/plan-cabeza.md)
 
