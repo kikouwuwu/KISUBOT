@@ -1,12 +1,15 @@
-// KISUBOT - Cabeza - Paso 3: dar órdenes al cuerpo por UART
+// KISUBOT - Cabeza - Fase 4: dar órdenes al cuerpo por UART
 //
+// Entorno de PlatformIO: cabeza-04-uart (el cuerpo usa cuerpo-04-uart)
 // Cada 2 segundos manda "LED_ON" o "LED_OFF" al cuerpo (ESP32 NodeMCU)
-// y muestra en el Monitor Serie lo que el cuerpo responde.
+// y muestra en el monitor serie lo que el cuerpo responde.
 //
-// Conexiones:
+// Conexiones (3 cables dupont hembra-hembra):
 //   Cabeza GPIO 1  (TX)  ->  Cuerpo GPIO 16 (RX2)
 //   Cabeza GPIO 14 (RX)  <-  Cuerpo GPIO 17 (TX2)
 //   Cabeza GND           --  Cuerpo GND
+
+#include <Arduino.h>
 
 const int UART_TX = 1;
 const int UART_RX = 14;

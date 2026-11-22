@@ -1,11 +1,18 @@
 # Claves de WiFi y de APIs: nunca se suben al repo
 secrets.h
 
-# Archivos de compilación
-build/
+# Ajustes de cada computador (puertos, etc.)
+platformio_local.ini
+
+# Archivos de compilación de PlatformIO
 .pio/
+build/
 *.bin
 *.elf
+
+# VS Code: solo se comparte la lista de extensiones recomendadas
+.vscode/*
+!.vscode/extensions.json
 
 # Sistema
 .DS_Store

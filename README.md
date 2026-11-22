@@ -4,25 +4,45 @@
 
 Estamos armando la **cabeza** (ESP32-S3 con cámara). Los motores vienen después.
 
-- ✅ Funcionan en la placa: LED, página web por WiFi y cámara (fases 0 a 3).
-- 🔧 Comunicación cabeza ↔ cuerpo (fase 4): cables conectados, falta subir los programas y probar.
-- 🧪 "¿Qué ves?" con Gemini (fase 5): la conexión con Gemini ya funciona en el simulador Wokwi; falta probarla con la cámara en la placa.
+- Funcionan en la placa: LED, página web por WiFi y cámara (fases 0 a 3).
+- Comunicación cabeza-cuerpo (fase 4): cables conectados, falta subir los programas y probar.
+- "¿Qué ves?" con Gemini (fase 5): la conexión con Gemini ya funciona en el simulador Wokwi; falta probarla con la cámara en la placa.
 
-👉 **Lista de tareas:** [docs/plan-cabeza.md](docs/plan-cabeza.md)
+**Lista de tareas:** [docs/plan-cabeza.md](docs/plan-cabeza.md)
 
-### Programas
+### Cómo se programa
 
-Se programan con Arduino IDE 2 y el paquete de placas **esp32 by Espressif Systems**. La configuración de la placa está en el plan.
+El firmware se programa con **[PlatformIO](https://platformio.org/)** en VS Code. Todo es un solo proyecto (`platformio.ini` en la raíz) y cada programa es un **entorno**.
 
-| Carpeta | Placa | Qué hace |
+```
+platformio.ini                 placas, memoria, librerías y entornos
+platformio_local.ini.example   ajustes de tu computador (puertos), opcional
+include/secrets.h.example      plantilla de claves: copiar como include/secrets.h
+src/cabeza/<programa>/         programas de la ESP32-S3
+src/cuerpo/<programa>/         programas de la ESP32 NodeMCU
+docs/                          planes y guías
+```
+
+Primeros pasos:
+
+1. Instalar VS Code y la extensión **PlatformIO IDE**.
+2. Abrir la carpeta del repo en VS Code.
+3. Copiar `include/secrets.h.example` como `include/secrets.h` y poner tus datos (no se sube al repo).
+4. Elegir el entorno en la barra inferior de PlatformIO y usar *Build*, *Upload* y *Serial Monitor*.
+
+Desde la terminal: `pio run -e cabeza-01-blink -t upload` y `pio device monitor -e cabeza-01-blink`.
+
+| Entorno | Placa | Qué hace |
 |---|---|---|
-| [`firmware/cabeza/01_blink`](firmware/cabeza/01_blink) | ESP32-S3 | Hace parpadear el LED (primer programa) |
-| [`firmware/cabeza/02_wifi_web`](firmware/cabeza/02_wifi_web) | ESP32-S3 | Página web para controlar el LED desde el celular |
-| [`firmware/cabeza/03_uart_cabeza`](firmware/cabeza/03_uart_cabeza) | ESP32-S3 | Manda órdenes al cuerpo por UART |
-| [`firmware/cuerpo/03_uart_cuerpo`](firmware/cuerpo/03_uart_cuerpo) | ESP32 NodeMCU | Recibe órdenes de la cabeza y responde |
-| [`firmware/cabeza/05_vision`](firmware/cabeza/05_vision) | ESP32-S3 | Saca una foto, se la manda a Gemini y muestra qué ve |
-| [`firmware/cabeza/05_prueba_wokwi`](firmware/cabeza/05_prueba_wokwi) | Simulador Wokwi | Prueba la clave de Gemini sin la placa |
-| [`firmware/cabeza/06_microfono`](firmware/cabeza/06_microfono) | ESP32-S3 | Muestra en el Serial Plotter cuánto sonido escucha el micrófono |
+| `cabeza-01-blink` | ESP32-S3 | Hace parpadear el LED (primer programa) |
+| `cabeza-02-wifi-web` | ESP32-S3 | Página web para controlar el LED desde el celular |
+| `cabeza-04-uart` | ESP32-S3 | Manda órdenes al cuerpo por UART |
+| `cuerpo-04-uart` | ESP32 NodeMCU | Recibe órdenes de la cabeza y responde |
+| `cabeza-05-vision` | ESP32-S3 | Saca una foto, se la manda a Gemini y muestra qué ve |
+| `cabeza-05-prueba-wokwi` | Simulador Wokwi | Prueba la clave de Gemini sin la placa |
+| `cabeza-06-microfono` | ESP32-S3 | Muestra cuánto sonido escucha el micrófono |
+
+Más detalles (puertos USB, drivers, qué hacer si falla la subida) en la fase 0 del [plan](docs/plan-cabeza.md).
 
 ---
 
@@ -52,8 +72,8 @@ Las placas se comunican por **UART** (2 cables). La cabeza manda órdenes genera
 
 ### Software
 
-- **Cuerpo**: Arduino IDE con el paquete de placas ESP32.
-- **Cabeza**: [XiaoZhi](https://github.com/78/xiaozhi-esp32), un proyecto de código abierto para conversar por voz con modelos de lenguaje. Usa el protocolo MCP, que permite que la IA dé órdenes al robot. Se compila con ESP-IDF (más complejo que Arduino).
+- **Cuerpo**: PlatformIO con el framework Arduino.
+- **Cabeza**: por ahora, programas de prueba en PlatformIO con el framework Arduino. Después, [XiaoZhi](https://github.com/78/xiaozhi-esp32), un proyecto de código abierto para conversar por voz con modelos de lenguaje. Usa el protocolo MCP, que permite que la IA dé órdenes al robot. Se compila con ESP-IDF (más complejo que Arduino).
   - Con el servidor oficial, la voz pasa por servidores de terceros. También se puede instalar un servidor propio.
   - Falta comprobar qué tan bien conversa en español.
 
@@ -93,7 +113,7 @@ Necesitas **2 motores** (uno por rueda). Todas las opciones funcionan con el dri
 | Opción | Cómo es | Ventajas | Desventajas | Link |
 |---|---|---|---|---|
 | **A. Motor TT amarillo** (3–6 V, 1:48, ~200 RPM, doble eje) | Caja reductora de plástico, el más usado en robots de este tipo. | Barato, fácil de montar, muchas ruedas y soportes compatibles. | Sin encoder: no sabe cuánto avanzó (se puede agregar un sensor de ranura). | [Motor](https://www.aliexpress.us/item/3256808497240025.html) · [Combo 2 motores + 2 ruedas](https://www.aliexpress.us/item/2261800123340069.html) |
-| **B. Motor TT con encoder Hall** (6 V, 1:48) ⭐ **recomendado** | Igual al TT, pero con un sensor que cuenta las vueltas. | Mismo montaje y ruedas que el TT; mide distancia y velocidad con precisión. | Algo más caro; ocupa 2 pines extra por motor. | [Ver opciones](https://es.aliexpress.com/w/wholesale-motor-encoder.html) (buscar "Hall Encoder TT Motor AB Phase") |
+| **B. Motor TT con encoder Hall** (6 V, 1:48), **recomendado** | Igual al TT, pero con un sensor que cuenta las vueltas. | Mismo montaje y ruedas que el TT; mide distancia y velocidad con precisión. | Algo más caro; ocupa 2 pines extra por motor. | [Ver opciones](https://es.aliexpress.com/w/wholesale-motor-encoder.html) (buscar "Hall Encoder TT Motor AB Phase") |
 | **C. Motor N20 con encoder** (6 V, engranajes metálicos) | Motor muy pequeño. Este aviso trae rueda de 34 mm, soporte y tornillos. | Compacto, preciso y con engranajes de metal. | Ruedas chicas: le cuesta en alfombras; menos fuerza. Elegir 300 RPM. | [Ver](https://www.aliexpress.us/item/3256801456325743.html) |
 | **D. Motor JGA25-370 con encoder** (6 V, engranajes metálicos) | Motor más grande y robusto. | Mucha fuerza, ideal si el robot queda pesado. Hay variante con rueda de 65 mm ("65mm Set Encoder"). | Más caro y pesado; consume más corriente, cerca del límite del TB6612. Elegir 6 V y 170 RPM. | [Ver](https://www.aliexpress.us/item/3256806026933051.html) |
 
@@ -146,7 +166,7 @@ Tienda: Global Chile Electrónica, globalelectronica.cl (confirmar stock por Wha
 
 ## Etapas sugeridas
 
-1. Armar el chasis y mover los motores con el ESP32 NodeMCU desde Arduino IDE.
+1. Armar el chasis y mover los motores con el ESP32 NodeMCU desde PlatformIO.
 2. Agregar el VL53L0X y los infrarrojos: que el robot avance, frene ante obstáculos y no se caiga.
 3. Agregar el MPU6050 para avanzar derecho y girar ángulos exactos.
 4. Conectar ambas placas por UART y mandar órdenes simples desde la ESP32-S3.

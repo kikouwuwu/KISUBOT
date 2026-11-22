@@ -1,12 +1,13 @@
-// KISUBOT - Fase 5 (prueba sin placa): conexión con Gemini en el simulador Wokwi
+// KISUBOT - Cabeza - Fase 5 (prueba sin placa): conexión con Gemini en el simulador Wokwi
 //
+// Entorno de PlatformIO: cabeza-05-prueba-wokwi (solo para comprobar que compila)
 // Sirve para probar la clave de Gemini y la conexión desde un computador
 // donde no puedes conectar la placa. No usa la cámara: manda una foto de
 // prueba (una pelota roja sobre pasto) que viene dentro del código.
 //
-// Cómo usarlo:
-// 1. Entra a wokwi.com, crea un proyecto nuevo y elige la placa ESP32-S3.
-// 2. Borra el código que trae y pega este.
+// Cómo usarlo en Wokwi:
+// 1. Entra a wokwi.com/projects/new/esp32-s3 (plantilla Arduino).
+// 2. Borra el código que trae y pega este archivo completo.
 // 3. En la pestaña "Library Manager" agrega "ArduinoJson".
 // 4. Pega tu clave abajo en GEMINI_API_KEY y aprieta el botón verde (Play).
 // 5. En el monitor serie debería aparecer algo como "Veo una pelota roja...".
@@ -14,13 +15,20 @@
 // OJO: NO guardes ni compartas el proyecto con la clave puesta. Si lo
 // guardas, otras personas podrían verla. Bórrala antes de guardar.
 
+#include <Arduino.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
+// En PlatformIO usa la clave de include/secrets.h si existe; en Wokwi, pégala aquí.
+#if __has_include("secrets.h")
+#include "secrets.h"
+#endif
+#ifndef GEMINI_API_KEY
 #define GEMINI_API_KEY "pega-aqui-tu-clave"
-#define GEMINI_MODEL "gemini-flash-lite-latest"   // el mismo que usa 05_vision
+#endif
+#define GEMINI_MODEL "gemini-flash-lite-latest"   // el mismo que usa cabeza-05-vision
 const char* PREGUNTA = "Describe en español, en una frase, lo que ves en esta foto.";
 
 // Foto de prueba (JPEG de 128x96) ya convertida a base64

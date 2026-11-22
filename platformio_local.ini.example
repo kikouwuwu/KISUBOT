@@ -1,0 +1,22 @@
+; Ajustes de tu computador (opcional).
+;
+; Copia este archivo como platformio_local.ini: no se sube al repo.
+; Normalmente no hace falta, porque PlatformIO encuentra el puerto solo.
+; Sirve cuando tienes las dos placas conectadas a la vez y elige mal.
+;
+; En Windows los puertos se llaman COM3, COM6, etc.
+; En Mac o Linux, /dev/cu.usbmodem... o /dev/ttyUSB0.
+
+[cabeza]
+upload_port = COM6
+monitor_port = COM6
+
+[cuerpo]
+upload_port = COM5
+monitor_port = COM5
+
+; Si la plataforma oficial (espressif32 8.x) no se instala en tu computador,
+; puedes probar con pioarduino, que trae una versión más nueva del núcleo
+; Arduino para ESP32. Quita los ";" de las dos líneas siguientes:
+; [env]
+; platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip

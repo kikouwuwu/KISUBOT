@@ -1,6 +1,7 @@
-// KISUBOT - Cuerpo - Paso 3: recibir órdenes de la cabeza por UART
+// KISUBOT - Cuerpo - Fase 4: recibir órdenes de la cabeza por UART
 //
-// Placa: ESP32 NodeMCU (ESP-32S). En Arduino: "ESP32 Dev Module".
+// Entorno de PlatformIO: cuerpo-04-uart (la cabeza usa cabeza-04-uart)
+// Placa: ESP32 NodeMCU (ESP-32S).
 // Escucha las órdenes de la cabeza, enciende o apaga el LED del pin 2
 // y responde "OK". Si tu placa no tiene LED en el pin 2, conecta uno
 // con una resistencia de 220 ohm entre el pin 2 y GND.
@@ -9,6 +10,11 @@
 //   Cuerpo GPIO 16 (RX2)  <-  Cabeza GPIO 1  (TX)
 //   Cuerpo GPIO 17 (TX2)  ->  Cabeza GPIO 14 (RX)
 //   Cuerpo GND            --  Cabeza GND
+// En algunas placas el 16 y el 17 aparecen como 16/17, G16/G17 o IO16/IO17.
+// Si tu placa no los tiene, cambia UART_RX y UART_TX por otros pines libres
+// (por ejemplo 25 y 26) y conecta los cables ahí.
+
+#include <Arduino.h>
 
 const int UART_RX = 16;
 const int UART_TX = 17;
