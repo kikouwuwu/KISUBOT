@@ -12,9 +12,9 @@ Marca cada tarea con `[x]` cuando la termines.
 | 1 — Parpadear un LED | ✅ Funciona |
 | 2 — WiFi y control desde el celular | ✅ Funciona |
 | 3 — Cámara | ✅ Funciona (se calienta con el video continuo) |
-| 4 — Cabeza ↔ cuerpo (UART) | ⏸️ En pausa: faltan pines soldados y cables |
+| 4 — Cabeza ↔ cuerpo (UART) | 🔧 En curso: cables conectados, falta probar |
 | 5 — IA con la cámara | 🧪 Clave y conexión probadas en Wokwi; falta probar con la cámara en la placa |
-| 6 — Audio | ⏳ Esperando micrófono y amplificador |
+| 6 — Audio | ⏳ Prueba del micrófono lista; esperando micrófono y amplificador |
 | 7 — Asistente de voz | ⏳ Después de la fase 6 |
 
 ---
@@ -23,12 +23,12 @@ Marca cada tarea con `[x]` cuando la termines.
 
 El envío desde AliExpress demora semanas, así que conviene pedir ahora lo que necesita la cabeza.
 
-- [ ] Micrófono INMP441 — [ver](https://www.aliexpress.us/i/3256809766096721.html). Es digital: los micrófonos de audífonos (como el HyperX Cloud II) son analógicos y no sirven sin un preamplificador.
-- [ ] Amplificador MAX98357A — [ver](https://www.aliexpress.us/item/3256810340465738.html)
-- [ ] Parlante 40 mm, 3 W, 4 Ω — [ver](https://www.aliexpress.us/item/3256811726937954.html). O sacar uno de un aparato viejo (juguete, parlante de PC o Bluetooth): debe decir 4 u 8 Ω y 1 a 3 W.
+- [ ] Micrófono INMP441 — [ver](https://www.aliexpress.us/i/3256809766096721.html). Es digital: los micrófonos de audífonos (como el HyperX Cloud II) y el módulo MAX4466 son analógicos y no sirven. En Global Electrónica (Viña) lo venden como ["INMP411"](https://globalelectronica.cl/5044-sonido/inmp411.html) ($4.990 al 20-11-2026); su ficha corresponde al INMP441 (I2S, pines SCK, WS, L/R y SD).
+- [ ] Amplificador MAX98357A — [ver](https://www.aliexpress.us/item/3256810340465738.html). No lo tienen en Global Electrónica; alternativa más rápida: Mercado Libre Chile.
+- [ ] Parlante de 4 u 8 Ω y 1 a 3 W. En Global Electrónica: mini parlante 40 mm, 2 W, 8 Ω (código 279401, $1.650 al 20-11-2026). O sacar uno de un aparato viejo (juguete, parlante de PC o Bluetooth).
 - [ ] Cable USB-C que transmita datos (no solo carga)
-- [ ] Tira de pines macho (header) para soldar en la ESP32-S3 (fase 4)
-- [ ] Cables dupont hembra-hembra (fase 4)
+- [x] Tira de pines macho (header) para soldar en la ESP32-S3 (fase 4)
+- [x] Cables dupont hembra-hembra (fase 4)
 
 ---
 
@@ -106,21 +106,49 @@ Se usa el ejemplo oficial que trae Arduino.
 
 ## Fase 4 — Conectar la cabeza con el cuerpo (UART)
 
-⏸️ **En pausa:** la ESP32-S3 viene sin pines soldados. Antes hay que soldarle una tira de pines (header) y conseguir cables dupont hembra-hembra. El cuerpo por ahora es la ESP32 NodeMCU.
+🔧 **En curso:** cables conectados; falta subir los programas y probar. El cuerpo por ahora es la ESP32 NodeMCU (la placa sin cámara, con un solo USB y los pines ya soldados).
 
 Programas: [`firmware/cabeza/03_uart_cabeza`](../firmware/cabeza/03_uart_cabeza/03_uart_cabeza.ino) y [`firmware/cuerpo/03_uart_cuerpo`](../firmware/cuerpo/03_uart_cuerpo/03_uart_cuerpo.ino)
 
-- [ ] Conectar los cables:
+### Soldar la tira de pines a la ESP32-S3
 
-| Cabeza (ESP32-S3) | Cuerpo (ESP32 NodeMCU) |
-|---|---|
-| GPIO 1 (TX) | GPIO 16 (RX2) |
-| GPIO 14 (RX) | GPIO 17 (TX2) |
-| GND | GND |
+La ESP32-S3 viene sin pines. Conviene soldar las dos filas completas: la placa queda firme y después se usan más pines (audio, alimentación).
 
-- [ ] Subir `03_uart_cuerpo` a la NodeMCU (en *Placa* elegir **ESP32 Dev Module**).
-- [ ] Subir `03_uart_cabeza` a la ESP32-S3.
-- [ ] Ver cómo el LED del cuerpo se enciende y apaga con las órdenes de la cabeza, y las respuestas en el Monitor Serie de la cabeza.
+1. Desconectar el USB y sacar la cinta de la cámara (levantar la trabita negra del conector).
+2. Cortar dos tramos de tira con la cantidad de agujeros de cada lado.
+3. Clavar el lado largo de los pines en una protoboard (o sujetarlos con cinta o plasticina) y poner la placa encima: pines hacia abajo, cámara hacia arriba.
+4. Soldar primero un pin en cada punta, revisar que la tira quede recta y después soldar el resto. Cada soldadura debe quedar como un cono pequeño y brillante.
+5. Revisar con el multímetro en continuidad que no haya puentes entre pines vecinos (sobre todo 3V3, 5V y GND).
+6. Volver a poner la cinta de la cámara y probar que la placa siga funcionando.
+
+### Conectar y probar
+
+- [x] Conectar **3 cables dupont hembra-hembra**, con las dos placas desconectadas del USB. No hace falta protoboard.
+
+| Cabeza (ESP32-S3) | Cuerpo (ESP32 NodeMCU) | Para qué |
+|---|---|---|
+| GPIO 1 (TX) | GPIO 16 (RX2) | Órdenes |
+| GPIO 14 (RX) | GPIO 17 (TX2) | Respuestas |
+| GND | GND | Tierra común (obligatoria) |
+
+> En algunas NodeMCU el 16 y el 17 dicen solo **16/17**, **G16/G17** o **IO16/IO17**, y están junto a los pines 5, 4, 0 y 2. **No usar los pines TX/RX (TX0/RX0)**: son los del USB.
+
+- [ ] Conectar **solo la NodeMCU**, elegir la placa **ESP32 Dev Module** y su puerto COM, y subir `03_uart_cuerpo`. Si se queda en "Connecting…", mantener apretado **BOOT**.
+- [ ] Conectar la ESP32-S3 por el USB-C **UART** (no el USB/OTG), elegir **ESP32S3 Dev Module** y el COM nuevo, y subir `03_uart_cabeza`.
+- [ ] Abrir el Monitor Serie (115200) en el puerto de la ESP32-S3 y apretar **EN/RST**. Debe aparecer:
+
+```
+Cabeza lista
+Cabeza -> cuerpo: LED_ON
+Cuerpo -> cabeza: OK LED_ON
+```
+
+- [ ] Ver que el LED de la NodeMCU se encienda y apague cada 2 segundos.
+
+**Si no funciona:**
+- Sale "Cabeza -> cuerpo" pero nunca "Cuerpo -> cabeza": intercambiar los cables de GPIO 1 y GPIO 14, y revisar el GND.
+- No aparece nada: revisar que el Monitor Serie esté en el COM de la ESP32-S3 y apretar EN/RST.
+- La NodeMCU no tiene pines 16 y 17: cambiar en `03_uart_cuerpo` los pines de `Serial2.begin` por otros libres (por ejemplo 25 y 26) y conectar ahí.
 
 ✅ Logro: la cabeza le da órdenes al cuerpo. Después esas órdenes serán "avanza" o "gira".
 
@@ -154,10 +182,25 @@ Ten en cuenta:
 
 ## Fase 6 — Audio (cuando llegue lo pedido)
 
-- [ ] Soldar los pines del micrófono y del amplificador.
-- [ ] Conectar según el plan de pines de abajo.
-- [ ] Probar el parlante con un tono simple.
-- [ ] Probar el micrófono: grabar unos segundos y reproducirlos.
+El micrófono se puede probar solo, sin esperar el amplificador.
+
+Programa: [`firmware/cabeza/06_microfono`](../firmware/cabeza/06_microfono/06_microfono.ino) (muestra el nivel de sonido en el Serial Plotter)
+
+- [ ] Soldar los pines del micrófono (sirve para practicar antes de soldar la ESP32-S3).
+- [ ] Conectar el micrófono con 6 cables dupont hembra-hembra:
+
+| INMP441 | ESP32-S3 |
+|---|---|
+| VDD | 3V3 (**nunca a 5V**) |
+| GND | GND |
+| L/R | GND |
+| SCK | GPIO 41 |
+| WS | GPIO 42 |
+| SD | GPIO 21 |
+
+- [ ] Subir `06_microfono`, abrir *Herramientas → Serial Plotter* (115200) y aplaudir: la línea debe subir. Si no se ve nada, el Monitor Serie dice qué cable revisar.
+- [ ] Cuando llegue el amplificador: conectarlo según el plan de pines de abajo y probar el parlante con un tono simple.
+- [ ] Probar el micrófono y el parlante juntos: grabar unos segundos y reproducirlos.
 
 ✅ Logro: el robot escucha y habla.
 
