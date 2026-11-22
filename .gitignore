@@ -3,6 +3,7 @@ secrets.h
 
 # Archivos de compilación
 build/
+.pio/
 *.bin
 *.elf
 
