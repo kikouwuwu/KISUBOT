@@ -1,18 +1,22 @@
-// KISUBOT - Cabeza - Paso 2: WiFi y control desde el celular
+// KISUBOT - Cabeza - Fase 2: WiFi y control desde el celular
 //
+// Entorno de PlatformIO: cabeza-02-wifi-web
 // La placa se conecta a tu WiFi y crea una página web con dos botones
 // para encender y apagar el LED. Ábrela desde el celular con la IP que
-// aparece en el Monitor Serie (115200 baudios).
+// aparece en el monitor serie (115200 baudios).
 //
-// Antes de subir: copia "secrets.h.example" como "secrets.h" y pon
-// el nombre y la clave de tu WiFi (solo redes de 2,4 GHz).
-// Si sale "secrets.h: No such file or directory", crea una pestaña
-// llamada exactamente secrets.h (menú ⋯ → Nueva pestaña) y pega ahí
-// los #define. Más detalles en docs/plan-cabeza.md (fase 2).
+// Antes de compilar: copia include/secrets.h.example como include/secrets.h
+// y pon el nombre y la clave de tu WiFi (solo redes de 2,4 GHz).
 
+#include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
+
+#if __has_include("secrets.h")
 #include "secrets.h"
+#else
+#error "Falta include/secrets.h: copia include/secrets.h.example como include/secrets.h y pon tus datos"
+#endif
 
 const int LED_PIN = 2;
 

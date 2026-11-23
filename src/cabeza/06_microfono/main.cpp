@@ -1,6 +1,10 @@
-// KISUBOT - Fase 6: prueba del micrófono INMP441
+// KISUBOT - Cabeza - Fase 6: prueba del micrófono INMP441
+//
+// Entorno de PlatformIO: cabeza-06-microfono
 // Muestra qué tan fuerte es el sonido que escucha el micrófono.
-// Ábrelo en Herramientas > Serial Plotter (115200) y aplaude o habla cerca.
+// Para verlo como gráfico, instala la extensión Teleplot en VS Code,
+// conéctala al puerto de la placa (115200) y aplaude o habla cerca.
+// En el monitor serie normal se ven los números (">nivel:1234").
 //
 // Conexión (plan de pines de la cabeza):
 //   INMP441 VDD -> 3V3   (NUNCA a 5V)
@@ -10,10 +14,12 @@
 //   INMP441 WS  -> GPIO 42
 //   INMP441 SD  -> GPIO 21
 //
-// Placa: ESP32S3 Dev Module, con la misma configuración de siempre.
 // Funciona aunque la cámara esté conectada: no comparten pines.
 
+#include <Arduino.h>
 #include <ESP_I2S.h>
+
+void avisar(const char* mensaje);
 
 const int PIN_BCLK = 41;       // SCK del micrófono
 const int PIN_WS = 42;         // WS del micrófono
@@ -31,10 +37,10 @@ void setup() {
 
   i2s.setPins(PIN_BCLK, PIN_WS, -1, PIN_DATOS_MIC);
   if (!i2s.begin(I2S_MODE_STD, 16000, I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_MONO, I2S_STD_SLOT_LEFT)) {
-    Serial.println("No se pudo iniciar el audio (I2S). Revisa que la placa sea ESP32S3 Dev Module.");
+    Serial.println("No se pudo iniciar el audio (I2S). Revisa que uses el entorno cabeza-06-microfono.");
     while (true) delay(1000);
   }
-  Serial.println("Listo. Abre Herramientas > Serial Plotter y aplaude cerca del microfono.");
+  Serial.println("Listo. Abre Teleplot (o el monitor serie) y aplaude cerca del microfono.");
 }
 
 void loop() {
@@ -67,8 +73,8 @@ void loop() {
   }
   long nivel = (long)sqrt(energia / leidas);
 
-  // Formato que entiende el Serial Plotter: nombre:valor
-  Serial.printf("nivel:%ld\n", nivel);
+  // Formato que entiende Teleplot: >nombre:valor
+  Serial.printf(">nivel:%ld\n", nivel);
 }
 
 void avisar(const char* mensaje) {

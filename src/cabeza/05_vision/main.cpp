@@ -1,13 +1,16 @@
-// KISUBOT - Fase 5: "¿Qué ves?"
+// KISUBOT - Cabeza - Fase 5: "¿Qué ves?"
+//
+// Entorno de PlatformIO: cabeza-05-vision
 // La cabeza (ESP32-S3) saca UNA foto cuando aprietas el botón en el celular,
 // se la manda a Gemini (nivel gratuito) y te muestra la respuesta.
 // A diferencia de CameraWebServer, NO transmite video: la cámara se apaga
 // entre fotos, así casi no se calienta.
 //
-// Placa: ESP32S3 Dev Module | PSRAM: OPI PSRAM | Partition: 16M Flash (3MB APP/9.9MB FATFS)
-// Librería: instala "ArduinoJson" (de Benoit Blanchon) en el Library Manager.
-// En la misma carpeta debe estar secrets.h con WIFI_SSID, WIFI_PASSWORD y GEMINI_API_KEY.
+// Antes de compilar: copia include/secrets.h.example como include/secrets.h
+// y pon WIFI_SSID, WIFI_PASSWORD y GEMINI_API_KEY.
+// La librería ArduinoJson la instala PlatformIO solo (lib_deps en platformio.ini).
 
+#include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
 #include <WiFiClientSecure.h>
@@ -15,7 +18,12 @@
 #include <ArduinoJson.h>
 #include <base64.h>
 #include "esp_camera.h"
+
+#if __has_include("secrets.h")
 #include "secrets.h"
+#else
+#error "Falta include/secrets.h: copia include/secrets.h.example como include/secrets.h y pon tus datos"
+#endif
 
 // ---------- Ajustes que puedes cambiar ----------
 #define GEMINI_MODEL "gemini-flash-lite-latest"   // si da error 404 o 429, prueba "gemini-flash-latest"
@@ -220,7 +228,7 @@ input{width:100%;box-sizing:border-box;padding:10px;font-size:16px;margin:10px 0
 img{width:100%;border-radius:12px;display:none}
 small{color:#999}
 </style></head><body>
-<h2>KISUBOT 👀</h2>
+<h2>KISUBOT</h2>
 <input id="q" placeholder="Pregunta opcional (ej: ¿hay algo en el suelo?)">
 <button id="b" onclick="ver()">¿Qué ves?</button>
 <div id="r"></div>
@@ -271,7 +279,7 @@ void setup() {
   Serial.println("\nKISUBOT - Fase 5: vision con Gemini");
 
   if (!psramFound()) {
-    Serial.println("OJO: no hay PSRAM. En Tools > PSRAM elige 'OPI PSRAM' y vuelve a subir.");
+    Serial.println("OJO: no hay PSRAM. Revisa board_build.arduino.memory_type = qio_opi en platformio.ini.");
   }
 
   // Prueba rápida de la cámara al arrancar
