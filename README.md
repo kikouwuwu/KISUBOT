@@ -6,7 +6,7 @@ Estamos armando la **cabeza** (ESP32-S3 con cámara). Los motores vienen despué
 
 - Funcionan en la placa: LED, página web por WiFi y cámara (fases 0 a 3).
 - Comunicación cabeza-cuerpo (fase 4): funciona.
-- "¿Qué ves?" con Gemini (fase 5): la conexión con Gemini ya funciona en el simulador Wokwi; falta probarla con la cámara en la placa.
+- "¿Qué ves?" con Gemini (fase 5): funciona en la placa con la cámara.
 
 **Lista de tareas:** [docs/plan-cabeza.md](docs/plan-cabeza.md)
 
@@ -85,7 +85,7 @@ Las placas se comunican por **UART** (2 cables). La cabeza manda órdenes genera
 
 | Componente | Para qué sirve |
 |---|---|
-| **ESP32-S3 N16R8 con cámara** (2 USB-C) | Cabeza del robot. La cámara ya viene conectada (por la cinta parece una OV5640). Pines libres: 1, 2, 14, 21, 41, 42 y 47 (más 38, 39 y 40 si no usas tarjeta SD). |
+| **ESP32-S3 N16R8 con cámara** (2 USB-C) | Cabeza del robot. La cámara ya viene conectada (OV5640, confirmada por el programa de la fase 5). Pines libres: 1, 2, 14, 21, 41, 42 y 47 (más 38, 39 y 40 si no usas tarjeta SD). |
 | **ESP32 NodeMCU (ESP-32S)** | Cuerpo del robot. Controla motores y sensores. |
 | **Sensor infrarrojo de obstáculos** (MH-B, LM393) | Mirando al suelo detecta bordes y escaleras. Mirando a un lado detecta obstáculos cercanos (aprox. 2 a 30 cm). Su sensibilidad se ajusta con el potenciómetro azul. |
 | **Conversor de nivel TXS0108E** | Convierte señales entre 5 V y 3,3 V. No hace falta con esta lista; queda de reserva. |
