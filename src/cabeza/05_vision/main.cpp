@@ -40,6 +40,7 @@ WebServer server(80);
 uint8_t* ultimaFoto = nullptr;   // copia de la última foto (en PSRAM)
 size_t ultimaFotoLen = 0;
 bool camaraLista = false;
+String estadoCamara = "sin probar";  // se repite en el monitor junto con la IP
 
 // ---------- Cámara ----------
 bool encenderCamara() {
@@ -170,6 +171,20 @@ String preguntarAGemini(const String& pregunta) {
   String respuesta = codigo > 0 ? http.getString() : String();
   http.end();
 
+  if (codigo < 0) {
+    // Diagnóstico: ¿falla el DNS, la conexión segura (TLS) o falta memoria?
+    IPAddress ip;
+    bool dnsOk = WiFi.hostByName("generativelanguage.googleapis.com", ip);
+    char errTls[120] = "";
+    int nTls = cliente.lastError(errTls, sizeof(errTls));
+    Serial.printf("Diagnostico: DNS %s (%s) | TLS %d: %s\n",
+                  dnsOk ? "OK" : "FALLA", ip.toString().c_str(), nTls, errTls);
+    Serial.printf("Memoria interna libre: %u bytes (bloque mayor %u) | PSRAM libre: %u | WiFi RSSI: %d dBm\n",
+                  (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL),
+                  (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL),
+                  (unsigned)ESP.getFreePsram(), WiFi.RSSI());
+  }
+
   if (codigo != 200) {
     Serial.printf("Gemini respondio %d:\n%s\n", codigo, respuesta.c_str());
     return explicarError(codigo);
@@ -284,9 +299,11 @@ void setup() {
 
   // Prueba rápida de la cámara al arrancar
   if (encenderCamara()) {
+    estadoCamara = String("OK, sensor ") + nombreSensor();
     Serial.printf("Camara OK. Sensor: %s\n", nombreSensor());
     if (APAGAR_CAMARA_ENTRE_FOTOS) apagarCamara();
   } else {
+    estadoCamara = "NO INICIO (revisa la cinta y reinicia)";
     Serial.println("La camara no inicio. Revisa la cinta (flex) y reinicia.");
   }
 
@@ -311,6 +328,15 @@ void setup() {
 
 void loop() {
   server.handleClient();
+
+  // Repite la IP y el estado de la cámara cada 10 segundos: con el USB nativo,
+  // el monitor suele conectarse después del arranque y se pierden esos avisos.
+  static unsigned long ultimoAviso = 0;
+  if (millis() - ultimoAviso >= 10000) {
+    ultimoAviso = millis();
+    Serial.printf("IP: http://%s | Camara: %s\n",
+                  WiFi.localIP().toString().c_str(), estadoCamara.c_str());
+  }
 
   // Prueba sin celular: escribe en el Serial Monitor y aprieta Enter
   if (Serial.available()) {
