@@ -1,0 +1,9 @@
+{
+    "type": "kisubot-cabeza",
+    "target": "esp32s3",
+    "builds": [
+        {
+            "name": "kisubot-cabeza"
+        }
+    ]
+}

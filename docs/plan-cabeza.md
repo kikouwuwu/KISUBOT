@@ -15,7 +15,7 @@ Marca cada tarea con `[x]` cuando la termines.
 | 4 - Cabeza y cuerpo por UART | Funciona |
 | 5 - IA con la cámara | Funciona en la placa (cámara OV5640) |
 | 6 - Audio | Prueba del micrófono lista; esperando micrófono y amplificador |
-| 7 - Asistente de voz | Pendiente, después de la fase 6 |
+| 7 - Asistente de voz | XiaoZhi arranca en la placa (cámara, WiFi, servidor); falta activarlo y el audio (fase 6) |
 
 ---
 
@@ -232,9 +232,17 @@ Logro: el robot escucha y habla.
 
 XiaoZhi es un proyecto de ESP-IDF con su propio sistema de compilación, así que se compila aparte, fuera de este proyecto de PlatformIO.
 
-- [ ] Instalar ESP-IDF (lo necesita XiaoZhi).
-- [ ] Compilar [XiaoZhi](https://github.com/78/xiaozhi-esp32) con los pines de esta placa.
-- [ ] Probar una conversación y revisar qué tan bien funciona en español.
+- [x] Instalar ESP-IDF (lo necesita XiaoZhi): v6.1.1, ver [`xiaozhi/README.md`](../xiaozhi/README.md).
+- [x] Compilar [XiaoZhi](https://github.com/78/xiaozhi-esp32) con los pines de esta placa: placa propia `kisubot-cabeza` en [`xiaozhi/`](../xiaozhi/).
+- [x] Subirlo a la placa y probar el arranque (26-11-2026, sin micrófono ni parlante):
+  - PSRAM octal de 8 MB detectada; placa reconocida como `kisubot-cabeza`.
+  - Cámara OV5640 detectada y en reposo después de la prueba inicial (`Camara en reposo: OK`).
+  - Audio duplex iniciado en los pines 41/42/21/47 (sin hardware conectado todavía).
+  - WiFi configurado desde el celular (red `Xiaozhi-XXXX`, página http://192.168.4.1); se conecta a la red de 2,4 GHz.
+  - Llega al servidor oficial (`api.tenclass.net`), confirma que el firmware está al día y queda esperando la activación con un código de 6 dígitos que solo aparece en el monitor serie (puerto UART, porque no hay pantalla). El código cambia en cada arranque.
+  - Sin errores ni reinicios; ~180 KB de RAM interna libre.
+- [ ] Decidir el servidor: cuenta en xiaozhi.me (rápido, pero la voz y las fotos pasan por servidores de terceros) o servidor propio (`xiaozhi-esp32-server`, más trabajo y un computador siempre encendido). Conviene decidirlo cuando llegue el micrófono.
+- [ ] Probar una conversación y revisar qué tan bien funciona en español. La palabra para despertarlo es "Hi ESP" (en inglés), o apretar BOOT.
 - [ ] Conectar la IA con el cuerpo: que pueda mandar órdenes por UART.
 
 Logro: conversas con el robot y te obedece.
