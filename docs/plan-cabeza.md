@@ -8,11 +8,11 @@ Marca cada tarea con `[x]` cuando la termines.
 
 | Fase | Estado |
 |---|---|
-| 0 - Preparar el computador | Listo con Arduino IDE; falta pasar a PlatformIO |
+| 0 - Preparar el computador | Listo con PlatformIO (fases 1, 2 y 4 probadas en la placa) |
 | 1 - Parpadear un LED | Funciona |
 | 2 - WiFi y control desde el celular | Funciona |
 | 3 - Cámara | Funciona (se calienta con el video continuo) |
-| 4 - Cabeza y cuerpo por UART | En curso: cables conectados, falta probar |
+| 4 - Cabeza y cuerpo por UART | Funciona |
 | 5 - IA con la cámara | Clave y conexión probadas en Wokwi; falta probar con la cámara en la placa |
 | 6 - Audio | Prueba del micrófono lista; esperando micrófono y amplificador |
 | 7 - Asistente de voz | Pendiente, después de la fase 6 |
@@ -123,7 +123,7 @@ Logro: el robot ve.
 
 ## Fase 4 - Conectar la cabeza con el cuerpo (UART)
 
-**En curso:** cables conectados; falta subir los programas y probar. El cuerpo por ahora es la ESP32 NodeMCU (la placa sin cámara, con un solo USB y los pines ya soldados).
+**Funciona:** la cabeza manda órdenes, el cuerpo enciende y apaga su LED y responde. El cuerpo por ahora es la ESP32 NodeMCU (la placa sin cámara, con un solo USB y los pines ya soldados).
 
 Entornos `cuerpo-04-uart` y `cabeza-04-uart` - programas: [`src/cuerpo/04_uart`](../src/cuerpo/04_uart/main.cpp) y [`src/cabeza/04_uart`](../src/cabeza/04_uart/main.cpp)
 
@@ -150,9 +150,10 @@ La ESP32-S3 viene sin pines. Conviene soldar las dos filas completas: la placa q
 
 > En algunas NodeMCU el 16 y el 17 dicen solo **16/17**, **G16/G17** o **IO16/IO17**, y están junto a los pines 5, 4, 0 y 2. **No usar los pines TX/RX (TX0/RX0)**: son los del USB.
 
-- [ ] Conectar **solo la NodeMCU**, elegir el entorno `cuerpo-04-uart` y apretar *Upload*. Si se queda en "Connecting...", mantener apretado **BOOT**.
-- [ ] Conectar la ESP32-S3 (ver "Puertos USB" en la fase 0), elegir `cabeza-04-uart` y apretar *Upload*.
-- [ ] Abrir el *Serial Monitor* de `cabeza-04-uart` y apretar **EN/RST**. Debe aparecer:
+- [x] Conectar **solo la NodeMCU**, elegir el entorno `cuerpo-04-uart` y apretar *Upload*. Si se queda en "Connecting...", mantener apretado **BOOT**.
+- [x] Conectar la ESP32-S3 por el USB-C **USB** (ver "Puertos USB" en la fase 0), elegir `cabeza-04-uart` y apretar *Upload*.
+  - Con las dos placas conectadas, PlatformIO puede elegir el puerto equivocado (error `This chip is ESP32, not ESP32-S3`). Solución: copiar `platformio_local.ini.example` como `platformio_local.ini` y poner el COM de cada placa (`pio device list` los muestra).
+- [x] Abrir el *Serial Monitor* de `cabeza-04-uart`. Debe aparecer:
 
 ```
 Cabeza lista
@@ -160,11 +161,12 @@ Cabeza -> cuerpo: LED_ON
 Cuerpo -> cabeza: OK LED_ON
 ```
 
-- [ ] Ver que el LED de la NodeMCU se encienda y apague cada 2 segundos.
+- [x] Ver que el LED de la NodeMCU se encienda y apague cada 2 segundos.
 
 **Si no funciona:**
 - Sale "Cabeza -> cuerpo" pero nunca "Cuerpo -> cabeza": intercambiar los cables de GPIO 1 y GPIO 14, y revisar el GND.
-- No aparece nada: revisar que el monitor esté en el puerto de la ESP32-S3 y apretar EN/RST.
+- No aparece nada: revisar que el monitor esté en el puerto de la ESP32-S3 (USB nativo) y que haya un solo monitor abierto.
+- Al apretar RST de la cabeza con el monitor abierto, el LED del cuerpo dejó de parpadear. Cerrar y volver a abrir el monitor lo arregló. Sospecha (sin confirmar): el monitor queda colgado del puerto USB nativo y la cabeza se traba escribiendo en `Serial`. Revisar antes de que la cabeza funcione sin computador.
 - PlatformIO sube a la placa equivocada: usar `platformio_local.ini` (fase 0) o conectar una placa a la vez.
 - La NodeMCU no tiene pines 16 y 17: cambiar `UART_RX` y `UART_TX` en `src/cuerpo/04_uart/main.cpp` por otros libres (por ejemplo 25 y 26) y conectar ahí.
 

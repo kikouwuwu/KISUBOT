@@ -86,4 +86,13 @@ void setup() {
 
 void loop() {
   server.handleClient();
+
+  // Repite la IP cada 5 segundos: con el USB nativo, el monitor suele
+  // conectarse después del arranque y se pierde el primer mensaje.
+  static unsigned long ultimoAviso = 0;
+  if (millis() - ultimoAviso >= 5000) {
+    ultimoAviso = millis();
+    Serial.print("IP: http://");
+    Serial.println(WiFi.localIP());
+  }
 }
