@@ -74,6 +74,15 @@ bool encenderCamara() {
 
 void apagarCamara() {
   if (!camaraLista) return;
+  // Esta placa no tiene pin de apagado (pin_pwdn = -1), así que deinit solo
+  // apaga el driver del ESP32: el sensor sigue encendido y se calienta.
+  // En la OV5640 el registro 0x3008 = 0x42 la pone en reposo (software
+  // power down). Al volver a encenderla, esp_camera_init la reinicia.
+  sensor_t* s = esp_camera_sensor_get();
+  if (s && s->id.PID == OV5640_PID) {
+    int r = s->set_reg(s, 0x3008, 0xff, 0x42);
+    Serial.printf("Camara en reposo: %s\n", r == 0 ? "OK" : "FALLO");
+  }
   esp_camera_deinit();
   camaraLista = false;
 }

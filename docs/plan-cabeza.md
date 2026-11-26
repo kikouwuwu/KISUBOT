@@ -195,7 +195,8 @@ Logro: "¿qué ves?" funciona en la placa (26-11-2026).
 > Nunca subas la API key al repo: va en `include/secrets.h`.
 
 Ten en cuenta:
-- La cámara se enciende solo para sacar la foto y se apaga después, para que no se caliente. Si la segunda foto falla, cambia `APAGAR_CAMARA_ENTRE_FOTOS` a `false`.
+- La cámara se enciende solo para sacar la foto y después queda en reposo, para que no se caliente. Si la segunda foto falla, cambia `APAGAR_CAMARA_ENTRE_FOTOS` a `false`.
+- Esta placa no tiene pin para cortarle la energía a la cámara (`pin_pwdn = -1`), así que `esp_camera_deinit()` sola deja el sensor encendido y la OV5640 se calentaba incluso sin sacar fotos. Por eso el programa la pone en reposo con el registro `0x3008 = 0x42` antes de apagarla. Con eso dejó de calentarse (26-11-2026). Los programas que no usan la cámara (blink, WiFi, UART) no la ponen en reposo.
 - En el nivel gratuito Google usa lo que envías para mejorar sus productos. No apuntes la cámara a documentos ni a personas que no quieran salir.
 - Hay un límite de consultas por día. Si aparece **Error 429**, se acabó la cuota: espera o prueba al día siguiente.
 - La conexión no verifica el certificado de Google (`setInsecure`). Sirve para probar en casa, pero hay que arreglarlo antes de usar el robot en otras redes.
