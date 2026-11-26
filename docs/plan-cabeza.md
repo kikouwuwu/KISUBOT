@@ -227,8 +227,8 @@ Logro: el robot escucha y habla.
 
 XiaoZhi es un proyecto de ESP-IDF con su propio sistema de compilación, así que se compila aparte, fuera de este proyecto de PlatformIO.
 
-- [ ] Instalar ESP-IDF (lo necesita XiaoZhi).
-- [ ] Compilar [XiaoZhi](https://github.com/78/xiaozhi-esp32) con los pines de esta placa.
+- [x] Instalar ESP-IDF (lo necesita XiaoZhi): v6.1.1, ver [`xiaozhi/README.md`](../xiaozhi/README.md).
+- [x] Compilar [XiaoZhi](https://github.com/78/xiaozhi-esp32) con los pines de esta placa: placa propia `kisubot-cabeza` en [`xiaozhi/`](../xiaozhi/). Compila (26-11-2026); falta probarla en la placa.
 - [ ] Probar una conversación y revisar qué tan bien funciona en español.
 - [ ] Conectar la IA con el cuerpo: que pueda mandar órdenes por UART.
 
