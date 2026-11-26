@@ -13,7 +13,7 @@ Marca cada tarea con `[x]` cuando la termines.
 | 2 - WiFi y control desde el celular | Funciona |
 | 3 - Cámara | Funciona (se calienta con el video continuo) |
 | 4 - Cabeza y cuerpo por UART | Funciona |
-| 5 - IA con la cámara | Clave y conexión probadas en Wokwi; falta probar con la cámara en la placa |
+| 5 - IA con la cámara | Funciona en la placa (cámara OV5640) |
 | 6 - Audio | Prueba del micrófono lista; esperando micrófono y amplificador |
 | 7 - Asistente de voz | Pendiente, después de la fase 6 |
 
@@ -183,11 +183,14 @@ Entornos `cabeza-05-vision` (en la placa) y `cabeza-05-prueba-wokwi` (en el simu
 - [x] Crear la clave en [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → *Create API key*. Usar el **Default project** y no agregarle facturación (así sigue gratis). Si pide restringirla, marcar solo **Generative Language API**.
 - [ ] Probar en AI Studio: subir una foto y preguntar lo mismo que preguntará el robot.
 - [x] (Sin placa) Probar la clave en Wokwi: crear un proyecto en [wokwi.com/projects/new/esp32-s3](https://wokwi.com/projects/new/esp32-s3), pegar el contenido de `src/cabeza/05_prueba_wokwi/main.cpp`, agregar la librería ArduinoJson y poner la clave. Resultado del 20-11-2026: *"Veo una pelota roja en el suelo contra un fondo verde y azul."*
-- [ ] Poner `GEMINI_API_KEY` en `include/secrets.h` (la librería ArduinoJson la instala PlatformIO sola).
-- [ ] Subir `cabeza-05-vision`, abrir la IP en el celular y apretar **¿Qué ves?**
-- [ ] Anotar qué cámara dice el monitor serie (`Sensor: ...`) y si se sigue calentando.
+- [x] Poner `GEMINI_API_KEY` en `include/secrets.h` (la librería ArduinoJson la instala PlatformIO sola).
+- [x] Subir `cabeza-05-vision`, abrir la IP en el celular y apretar **¿Qué ves?** El monitor repite la IP y el estado de la cámara cada 10 segundos.
+- [x] Anotar qué cámara dice el monitor serie: **OV5640**. Temperatura del chip en las primeras fotos: 36-40 °C (normal; preocuparse sobre 70 °C).
+- [ ] Sacar 4 o 5 fotos seguidas y ver si la temperatura se mantiene o sigue subiendo.
 
-Logro: "¿qué ves?" funciona.
+Logro: "¿qué ves?" funciona en la placa (26-11-2026).
+
+**Si sale "Sin conexión con Gemini (error -1)":** en la primera prueba pasó una vez y después funcionó sin cambiar nada; la causa no quedó clara. El monitor ahora muestra una línea `Diagnostico:` que dice si falló el DNS o la conexión segura (TLS), cuánta memoria quedaba y la señal WiFi (RSSI). Si se repite, guardar esa línea.
 
 > Nunca subas la API key al repo: va en `include/secrets.h`.
 
